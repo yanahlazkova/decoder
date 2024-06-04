@@ -4,44 +4,50 @@ class MyWindow(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("My CustomTkinter App")
-        self.geometry("400x400")
+        ctk.set_appearance_mode("light")  # Настройка внешнего вида (может быть "light", "dark", или "system")
+        ctk.set_default_color_theme("blue")  # Установка темы
 
-        # Создание и размещение виджетов
+        self.title("Decoder")
+        self.geometry("500x300")
 
-        # Метка
-        self.label = ctk.CTkLabel(self, text="Hello, CustomTkinter!")
-        self.label.pack(pady=10)
+        # Заголовок
+        self.label_title = ctk.CTkLabel(self, text="Шифр Цезаря", font=ctk.CTkFont(size=20, weight="bold"))
+        self.label_title.pack(pady=10)
 
-        # Поле ввода
-        self.entry = ctk.CTkEntry(self, placeholder_text="Enter text here")
-        self.entry.pack(pady=10)
+        # Метка и поле ввода текста
+        self.label_input = ctk.CTkLabel(self, text="Введи текст для зашифровки")
+        self.label_input.pack(pady=5)
+        self.entry_text = ctk.CTkEntry(self, width=300)
+        self.entry_text.pack(pady=5)
 
-        # Кнопка
-        self.button = ctk.CTkButton(self, text="Click Me", command=self.button_clicked)
-        self.button.pack(pady=10)
+        # Метка и слайдер для выбора размаха сдвига
+        self.label_slider = ctk.CTkLabel(self, text="Выбери размах сдвига")
+        self.label_slider.pack(pady=5)
+        self.slider_shift = ctk.CTkSlider(self, width=300, from_=-15, to=15, number_of_steps=30, command=self.update_cipher)
+        self.slider_shift.pack(pady=5)
+        self.slider_shift.set(0)
 
-        # Список
-        self.listbox = ctk.CTkListbox(self)
-        self.listbox.pack(pady=10)
-        self.listbox.insert(0, "Item 1")
-        self.listbox.insert(1, "Item 2")
-        self.listbox.insert(2, "Item 3")
+        # Метка для отображения зашифрованного текста
+        self.label_output = ctk.CTkLabel(self, text="Зашифрованный текст: ")
+        self.label_output.pack(pady=10)
 
-        # Переключатель
-        self.checkbox = ctk.CTkCheckBox(self, text="Check Me")
-        self.checkbox.pack(pady=10)
+    def update_cipher(self, value):
+        shift = int(value)
+        text = self.entry_text.get()
+        encrypted_text = self.caesar_cipher(text, shift)
+        self.label_output.configure(text=f"Зашифрованный текст: {encrypted_text}")
 
-        # Радиокнопки
-        self.radio_var = ctk.StringVar(value="1")
-        self.radiobutton1 = ctk.CTkRadioButton(self, text="Option 1", variable=self.radio_var, value="1")
-        self.radiobutton2 = ctk.CTkRadioButton(self, text="Option 2", variable=self.radio_var, value="2")
-        self.radiobutton1.pack(pady=5)
-        self.radiobutton2.pack(pady=5)
+    def caesar_cipher(self, text, shift):
+        result = []
+        for char in text:
+            print('isascii', char.isascii())
+            if char.isalpha():
+                print(ord(char))
+                shift_amount = 65 if char.isupper() else 97
+                result.append(chr((ord(char) - shift_amount + shift) % 26 + shift_amount))
+            else:
+                result.append(char)
+        return ''.join(result)
 
-    def button_clicked(self):
-        print("Button clicked! Entry text:", self.entry.get())
 
-if __name__ == "__main__":
-    app = MyApp()
-    app.mainloop()
+
