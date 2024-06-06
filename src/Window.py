@@ -34,14 +34,13 @@ class MyWindow(ctk.CTk):
         self.label_output.pack(pady=10)
 
     def update_cipher(self, value):
+
         if self.current_value_slider < value:
             self.current_value_slider += 1
-            shift = self.current_value_slider
         else:
             self.current_value_slider -= 1
-            shift = self.current_value_slider
 
-        shift =
+        shift = self.current_value_slider
         text = self.entry_text.get()
         encrypted_text = self.caesar_cipher(text, shift)
         self.label_output.configure(text=f"Зашифрованный текст: {encrypted_text}")
@@ -62,7 +61,7 @@ class MyWindow(ctk.CTk):
 
 
 class CustomSlider(ctk.CTkFrame):
-    def __init__(self, master, from_=0, to=100, number_of_ticks=10, **kwargs):
+    def __init__(self, master, from_=0, to=100, number_of_ticks=10, command=None, **kwargs):
         super().__init__(master, **kwargs)
         self.slider = ctk.CTkSlider(self, width=450, from_=from_, to=to, command=self.update_value)
         self.slider.pack(pady=10, padx=10)
